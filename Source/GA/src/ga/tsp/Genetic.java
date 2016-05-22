@@ -11,8 +11,10 @@ public class Genetic {
 
   private Population pop;
 
-  private Tour cxCrossover(final Tour parent1, final Tour parent2) {
-    final Tour child = new Tour(true);
+  private void cxCrossover(final Tour male, final Tour female, Tour child1, Tour child2) {
+    
+	  
+	 /* final Tour child = new Tour(true);
     int index = 0;
     while (!child.contains(parent2.getCity(index))) {
       child.setCity(index, parent1.getCity(index));
@@ -27,8 +29,69 @@ public class Genetic {
       }
     }
 
-    return child;
+    return child; */
+	  
+	  //abi mantıken bir child değil iki children dönmesi gerekli değil mi ?
+	  // O yüzden parametre ile gonderdim void'e aldım kodu.
+	  // Ama yine de sen bilirsin tabi
+	  
+	  int breakingPoint = this.breakUp();
+		
+		child1 = new Tour(true);
+		
+		child2 = new Tour(true);
+		
+		int i = 0 ;
+		
+		while(i != breakingPoint) // 1. kromozom icin
+		{
+			child1.setCity(i, male.getCity(i));
+			i++;
+		}
+		
+		int j = i;
+		
+		while(i != female.getSize()) // 2. kromozom icin
+		{
+			child1.setCity(i,female.getCity(i));
+			i++;
+		}
+		
+		while(j != male.getSize()) // 1.kromozom devami
+		{
+			child2.setCity(j, male.getCity(j));
+			j++;
+		}
+		
+		int t = 0 ;
+		
+		while(t != breakingPoint) // 2. kromozom devami
+		{
+			child2.setCity(t, female.getCity(t));
+			t++;
+		}
+    
+   
+    
   }
+  
+  private Tour oxCrossover(final Tour parent1, final Tour parent2)
+  {
+	 
+	  
+  }
+  
+	public int breakUp() // ayrılacağı noktayı belirliyor !
+	{
+		Random r = new Random();
+		
+		int breakingPoint = 0; 
+		breakingPoint = r.nextInt(parent1.getSize()); 
+		
+		
+		return breakingPoint;
+		
+	}
 
   private Population evalPopulation() {
     final Population newPop = new Population(false);
