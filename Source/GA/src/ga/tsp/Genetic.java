@@ -110,8 +110,9 @@ public class Genetic {
       }
 
       if (Util.CROSSOVER_TYPE.equals("CX")) {
-        child1 = this.cxCrossover(parent1, parent2);
-        child2 = this.cxCrossover(parent2, parent1);
+      	this.cxCrossover(parent1,parent2,child1,child2);
+        /*child1 = this.cxCrossover(parent1, parent2);
+        child2 = this.cxCrossover(parent2, parent1); */
       } else if (Util.CROSSOVER_TYPE.equals("OX")) {
         // child1 = this.oxCrossover();
         // child2 = this.oxCrossover();
