@@ -35,11 +35,9 @@ public class Genetic {
 	  // O yüzden parametre ile gonderdim void'e aldım kodu.
 	  // Ama yine de sen bilirsin tabi
 	  
-	  int breakingPoint = this.breakUp();
+	  int breakingPoint = this.breakUp(male);
 		
-		child1 = new Tour(true);
 		
-		child2 = new Tour(true);
 		
 		int i = 0 ;
 		
@@ -52,7 +50,8 @@ public class Genetic {
 		int j = i;
 		
 		while(i != female.getSize()) // 2. kromozom icin
-		{
+		{	
+			int x = female.getSize();
 			child1.setCity(i,female.getCity(i));
 			i++;
 		}
@@ -75,14 +74,14 @@ public class Genetic {
     
   }
   
-  private Tour oxCrossover(final Tour parent1, final Tour parent2)
+  /*private Tour oxCrossover(final Tour parent1, final Tour parent2)
   {
 	 
 	  
-  }
+  } */
   
-	public int breakUp() // ayrılacağı noktayı belirliyor !
-	{
+  public int breakUp(Tour parent1) // ayrılacağı noktayı belirliyor !
+  {
 		Random r = new Random();
 		
 		int breakingPoint = 0; 
@@ -91,7 +90,7 @@ public class Genetic {
 		
 		return breakingPoint;
 		
-	}
+  }
 
   private Population evalPopulation() {
     final Population newPop = new Population(false);
@@ -110,6 +109,11 @@ public class Genetic {
       }
 
       if (Util.CROSSOVER_TYPE.equals("CX")) {
+    	  
+    	  child1 = new Tour(true);
+  		
+  		child2 = new Tour(true);
+    	  
       	this.cxCrossover(parent1,parent2,child1,child2);
         /*child1 = this.cxCrossover(parent1, parent2);
         child2 = this.cxCrossover(parent2, parent1); */

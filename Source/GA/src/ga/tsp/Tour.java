@@ -65,7 +65,8 @@ public class Tour {
     if (this.cityList.size() == 0) {
       this.cityList.add(city);
     } else {
-      this.cityList.set(index, city);
+     // this.cityList.set(index, city);
+    	this.cityList.add(city);
     }
   }
 
