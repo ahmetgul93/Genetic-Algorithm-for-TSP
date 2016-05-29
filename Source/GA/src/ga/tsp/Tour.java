@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ga.tsp.CityFactory.City;
+import ga.tsp.CityManager.City;
 
 public class Tour {
 
@@ -12,10 +12,10 @@ public class Tour {
 
   private double distance;
 
-  private List<City> cityList;
+  private final List<City> cityList;
 
   public Tour(final boolean empty) {
-    this.cityList = new ArrayList<City>(Util.CHROMOSOME_LENGTH);
+    this.cityList = new ArrayList<City>(CityManager.getInstance().getSize());
     if (!empty) {
       this.generateTour();
     }
@@ -26,7 +26,7 @@ public class Tour {
   }
 
   private void generateTour() {
-    this.cityList = CityFactory.getInstance().generateCities();
+    this.cityList.addAll(CityManager.getInstance().getCities());
     Collections.shuffle(this.cityList); // ?
     this.fitnessValue = 0;
     this.distance = 0;
@@ -44,7 +44,7 @@ public class Tour {
     if (this.distance == 0) {
       for (int i = 0; i < this.getSize() - 1; i++) {
         this.distance +=
-            CityFactory.getInstance().getDistance(this.cityList.get(i), this.cityList.get(i + 1));
+            CityManager.getInstance().getDistance(this.cityList.get(i), this.cityList.get(i + 1));
       }
     }
     return this.distance;
@@ -65,8 +65,8 @@ public class Tour {
     if (this.cityList.size() == 0) {
       this.cityList.add(city);
     } else {
-     // this.cityList.set(index, city);
-    	this.cityList.add(city);
+      // this.cityList.set(index, city);
+      this.cityList.add(city);
     }
   }
 

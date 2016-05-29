@@ -1,10 +1,10 @@
 package ga.tsp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
-public class CityFactory {
+public class CityManager {
 
   public class City {
 
@@ -12,15 +12,15 @@ public class CityFactory {
 
     private double y;
 
-    private City() {
-      this.setX(CityFactory.this.rand.nextDouble() * Util.RAND_FACTOR);
-      this.setY(CityFactory.this.rand.nextDouble() * Util.RAND_FACTOR);
+    public City(final double x, final double y) {
+      this.setX(x);
+      this.setY(y);
     }
 
     @Override
     public boolean equals(final Object obj) {
       if (obj instanceof City) {
-        final CityFactory.City other = (City) obj;
+        final City other = (City) obj;
         if (other.getX() == this.getX() && other.getY() == this.getY()) {
           return true;
         }
@@ -48,32 +48,34 @@ public class CityFactory {
     public String toString() {
       return "(" + this.getX() + "," + this.getY() + ")";
     }
+
   }
 
-  private static List<City> listOfCity;
+  private static CityManager instance;
 
-  private static CityFactory instance;
-
-  public static CityFactory getInstance() {
-    if (CityFactory.instance == null) {
-      CityFactory.instance = new CityFactory();
+  public static CityManager getInstance() {
+    if (instance == null) {
+      instance = new CityManager();
     }
-    return CityFactory.instance;
+
+    return instance;
   }
 
-  private final Random rand = new Random();
+  private final List<City> cities = new ArrayList<City>();
 
-  public List<City> generateCities() {
-    if (CityFactory.listOfCity == null) {
-      CityFactory.listOfCity = new ArrayList<>();
-      for (int i = 0; i < Util.CHROMOSOME_LENGTH; i++) {
-        CityFactory.listOfCity.add(new City());
-      }
-    }
-    return CityFactory.listOfCity;
+  public void createCity(final double x, final double y) {
+    this.cities.add(new City(x, y));
+  }
+
+  public List<City> getCities() {
+    return Collections.unmodifiableList(this.cities);
   }
 
   public double getDistance(final City c1, final City c2) {
     return Math.sqrt(Math.pow(c1.getX() - c2.getX(), 2) + Math.pow(c1.getY() - c2.getY(), 2));
+  }
+
+  public int getSize() {
+    return this.cities.size();
   }
 }

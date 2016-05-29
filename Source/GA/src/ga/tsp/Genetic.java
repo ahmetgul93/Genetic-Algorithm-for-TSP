@@ -4,92 +4,89 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
-import ga.tsp.CityFactory.City;
+import ga.tsp.CityManager.City;
 import ga.tsp.exception.InvalidSelectionStateException;
 
 public class Genetic {
 
   private Population pop;
 
-  private void cxCrossover(final Tour male, final Tour female, Tour child1, Tour child2) {
-    
-	  
-	 /* final Tour child = new Tour(true);
-    int index = 0;
-    while (!child.contains(parent2.getCity(index))) {
-      child.setCity(index, parent1.getCity(index));
-      final int position = this.getPosition(parent1, parent2.getCity(index));
-      child.setCity(position, parent2.getCity(index));
-      index = position;
-    }
+  public int breakUp(final Tour parent1) // ayrılacağı noktayı belirliyor !
+  {
+    final Random r = new Random();
 
-    for (int i = 0; i < child.getSize(); i++) {
-      if (child.getCity(i) == null) {
-        child.setCity(i, parent2.getCity(i));
-      }
-    }
+    int breakingPoint = 0;
+    breakingPoint = r.nextInt(parent1.getSize());
 
-    return child; */
-	  
-	  //abi mantıken bir child değil iki children dönmesi gerekli değil mi ?
-	  // O yüzden parametre ile gonderdim void'e aldım kodu.
-	  // Ama yine de sen bilirsin tabi
-	  
-	  int breakingPoint = this.breakUp(male);
-		
-		
-		
-		int i = 0 ;
-		
-		while(i != breakingPoint) // 1. kromozom icin
-		{
-			child1.setCity(i, male.getCity(i));
-			i++;
-		}
-		
-		int j = i;
-		
-		while(i != female.getSize()) // 2. kromozom icin
-		{	
-			int x = female.getSize();
-			child1.setCity(i,female.getCity(i));
-			i++;
-		}
-		
-		while(j != male.getSize()) // 1.kromozom devami
-		{
-			child2.setCity(j, male.getCity(j));
-			j++;
-		}
-		
-		int t = 0 ;
-		
-		while(t != breakingPoint) // 2. kromozom devami
-		{
-			child2.setCity(t, female.getCity(t));
-			t++;
-		}
-    
-   
-    
+
+    return breakingPoint;
+
   }
-  
-  /*private Tour oxCrossover(final Tour parent1, final Tour parent2)
-  {
-	 
-	  
-  } */
-  
-  public int breakUp(Tour parent1) // ayrılacağı noktayı belirliyor !
-  {
-		Random r = new Random();
-		
-		int breakingPoint = 0; 
-		breakingPoint = r.nextInt(parent1.getSize()); 
-		
-		
-		return breakingPoint;
-		
+
+  /*
+   * private Tour oxCrossover(final Tour parent1, final Tour parent2) {
+   * 
+   * 
+   * }
+   */
+
+  private void cxCrossover(final Tour male, final Tour female, final Tour child1,
+      final Tour child2) {
+
+
+    /*
+     * final Tour child = new Tour(true); int index = 0; while
+     * (!child.contains(parent2.getCity(index))) { child.setCity(index, parent1.getCity(index));
+     * final int position = this.getPosition(parent1, parent2.getCity(index));
+     * child.setCity(position, parent2.getCity(index)); index = position; }
+     * 
+     * for (int i = 0; i < child.getSize(); i++) { if (child.getCity(i) == null) { child.setCity(i,
+     * parent2.getCity(i)); } }
+     * 
+     * return child;
+     */
+
+    // abi mantıken bir child değil iki children dönmesi gerekli değil mi ?
+    // O yüzden parametre ile gonderdim void'e aldım kodu.
+    // Ama yine de sen bilirsin tabi
+
+    final int breakingPoint = this.breakUp(male);
+
+
+
+    int i = 0;
+
+    while (i != breakingPoint) // 1. kromozom icin
+    {
+      child1.setCity(i, male.getCity(i));
+      i++;
+    }
+
+    int j = i;
+
+    while (i != female.getSize()) // 2. kromozom icin
+    {
+      final int x = female.getSize();
+      child1.setCity(i, female.getCity(i));
+      i++;
+    }
+
+    while (j != male.getSize()) // 1.kromozom devami
+    {
+      child2.setCity(j, male.getCity(j));
+      j++;
+    }
+
+    int t = 0;
+
+    while (t != breakingPoint) // 2. kromozom devami
+    {
+      child2.setCity(t, female.getCity(t));
+      t++;
+    }
+
+
+
   }
 
   private Population evalPopulation() {
@@ -109,14 +106,15 @@ public class Genetic {
       }
 
       if (Util.CROSSOVER_TYPE.equals("CX")) {
-    	  
-    	  child1 = new Tour(true);
-  		
-  		child2 = new Tour(true);
-    	  
-      	this.cxCrossover(parent1,parent2,child1,child2);
-        /*child1 = this.cxCrossover(parent1, parent2);
-        child2 = this.cxCrossover(parent2, parent1); */
+
+        child1 = new Tour(true);
+
+        child2 = new Tour(true);
+
+        this.cxCrossover(parent1, parent2, child1, child2);
+        /*
+         * child1 = this.cxCrossover(parent1, parent2); child2 = this.cxCrossover(parent2, parent1);
+         */
       } else if (Util.CROSSOVER_TYPE.equals("OX")) {
         // child1 = this.oxCrossover();
         // child2 = this.oxCrossover();

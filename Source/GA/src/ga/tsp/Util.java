@@ -8,8 +8,6 @@ public class Util {
 
   public static final int POPULATION_SIZE = 30;
 
-  public static final int CHROMOSOME_LENGTH = 9;
-
   public static final boolean ELITISM = true;
 
   public static final int ELITISM_COUNT = 1; // TODO
