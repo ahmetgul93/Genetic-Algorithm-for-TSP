@@ -40,14 +40,8 @@ public class Population {
     this.tours.addAll(elites);
   }
 
-  public Tour getBest() {
-    Tour best = this.tours.get(0);
-    for (int i = 1; i < this.tours.size(); i++) {
-      if (this.tours.get(i).getFitnessValue() > best.getFitnessValue()) {
-        best = this.tours.get(i);
-      }
-    }
-    return best;
+  public void addTour(final int index, final Tour tour) {
+    this.tours.add(tour);
   }
 
   // public List<Tour> getBestOnes() {
@@ -58,11 +52,17 @@ public class Population {
   // return bestOnes;
   // }
 
-  public Tour getTour(final int i) {
-    return this.tours.get(i);
+  public Tour getBest() {
+    Tour best = this.tours.get(0);
+    for (int i = 1; i < this.tours.size(); i++) {
+      if (this.tours.get(i).getFitnessValue() > best.getFitnessValue()) {
+        best = this.tours.get(i);
+      }
+    }
+    return best;
   }
 
-  public void setTour(final int index, final Tour tour) {
-    this.tours.add(index, tour);
+  public Tour getTour(final int i) {
+    return this.tours.get(i);
   }
 }

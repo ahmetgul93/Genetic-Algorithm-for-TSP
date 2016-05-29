@@ -132,9 +132,7 @@ public class Genetic {
     }
 
     for (int i = Util.ELITISM_COUNT; i < Util.POPULATION_SIZE; i += 2) {
-      Tour parent1 = null, parent2 = null;
-      Tour child1 = null;
-      Tour child2 = null;
+      Tour parent1 = null, parent2 = null, child1 = null, child2 = null;
       try {
         parent1 = this.wheelRouletteSelection();
         parent2 = this.wheelRouletteSelection();
@@ -150,8 +148,8 @@ public class Genetic {
         child2 = this.pmxCrossover(parent2, parent1);
       }
 
-      newPop.setTour(i, child1);
-      newPop.setTour(i + 1, child2);
+      newPop.addTour(i, child1);
+      newPop.addTour(i + 1, child2);
     }
 
     for (int i = Util.ELITISM_COUNT; i < Util.POPULATION_SIZE; i++) {

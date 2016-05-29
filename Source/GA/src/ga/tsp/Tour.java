@@ -33,10 +33,15 @@ public class Tour {
     return this.cityList.contains(city);
   }
 
+  @Override
+  public boolean equals(final Object obj) {
+    return super.equals(obj);
+  }
+
   private void generateTour() {
     this.cityList.clear();
     this.cityList.addAll(CityManager.getInstance().getCities());
-    Collections.shuffle(this.cityList); // ?
+    Collections.shuffle(this.cityList);
     this.fitnessValue = 0;
     this.distance = 0;
   }
@@ -55,6 +60,8 @@ public class Tour {
         this.distance +=
             CityManager.getInstance().getDistance(this.cityList.get(i), this.cityList.get(i + 1));
       }
+      this.distance += CityManager.getInstance().getDistance(this.cityList.get(this.getSize() - 1),
+          this.cityList.get(0));
     }
     return this.distance;
   }

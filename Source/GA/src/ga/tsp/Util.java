@@ -2,7 +2,7 @@ package ga.tsp;
 
 public class Util {
 
-  public static final int POPULATION_SIZE = 200;
+  public static final int POPULATION_SIZE = 300;
 
   public static final boolean ELITISM = true;
 
@@ -14,5 +14,5 @@ public class Util {
 
   public static final double MUTATION_PROBABILITY = 0.015;
 
-  public static final int GENERATION_COUNT = 300;
+  public static final int GENERATION_COUNT = 500;
 }
