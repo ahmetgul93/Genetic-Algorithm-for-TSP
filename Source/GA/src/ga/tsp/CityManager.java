@@ -12,6 +12,8 @@ public class CityManager {
 
     private double y;
 
+    public City() {}
+
     public City(final double x, final double y) {
       this.setX(x);
       this.setY(y);
@@ -65,6 +67,10 @@ public class CityManager {
 
   public void createCity(final double x, final double y) {
     this.cities.add(new City(x, y));
+  }
+
+  public City createEmptyCity() {
+    return new City();
   }
 
   public List<City> getCities() {

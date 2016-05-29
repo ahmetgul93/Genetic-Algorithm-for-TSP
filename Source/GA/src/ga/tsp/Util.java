@@ -18,5 +18,5 @@ public class Util {
 
   public static final double MUTATION_PROBABILITY = 0.01;
 
-  public static final int GENERATION_COUNT = 150;
+  public static final int GENERATION_COUNT = 200;
 }

@@ -16,6 +16,10 @@ public class Tour {
 
   public Tour(final boolean empty) {
     this.cityList = new ArrayList<City>(CityManager.getInstance().getSize());
+    for (int i = 0; i < CityManager.getInstance().getSize(); i++) {
+      this.cityList.add(CityManager.getInstance().createEmptyCity());
+    }
+
     if (!empty) {
       this.generateTour();
     }
@@ -26,6 +30,7 @@ public class Tour {
   }
 
   private void generateTour() {
+    this.cityList.clear();
     this.cityList.addAll(CityManager.getInstance().getCities());
     Collections.shuffle(this.cityList); // ?
     this.fitnessValue = 0;
@@ -62,12 +67,9 @@ public class Tour {
   }
 
   public void setCity(final int index, final City city) {
-    if (this.cityList.size() == 0) {
-      this.cityList.add(city);
-    } else {
-      // this.cityList.set(index, city);
-      this.cityList.add(city);
-    }
+    this.cityList.set(index, city);
+    this.fitnessValue = 0;
+    this.distance = 0;
   }
 
   @Override
