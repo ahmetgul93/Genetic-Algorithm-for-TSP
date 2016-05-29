@@ -1,23 +1,39 @@
 package ga.tsp;
 
-import ga.tsp.exception.InvalidInputException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import ga.tsp.exception.InvalidCrossoverException;
+import ga.tsp.exception.InvalidInstanceException;
 import reader.CityReader;
 
-// TODO Two different crossing types and two different chromosome length will be use.
 public class Initializer {
 
-  private static void constructCities() {
-    CityReader reader;
-    try {
-      reader = new CityReader();
-      reader.fetchCities();
-    } catch (final InvalidInputException e) {
-      e.printStackTrace();
-    }
+  private static void constructCities() throws InvalidInstanceException {
+    final CityReader reader = new CityReader();
+    reader.fetchCities();
   }
 
-  public static void main(final String[] args) {
-    constructCities();
+  public static void main(final String[] args) throws InvalidCrossoverException {
+    try {
+      constructCities();
+    } catch (final InvalidInstanceException e) {
+      e.printStackTrace();
+    }
+    System.out.println("Please write one crossover type for process (CX or PMX)");
+    final BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+    String crossoverType = null;
+    try {
+      crossoverType = bufferRead.readLine();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+    if (crossoverType.toUpperCase().equals("CX") || crossoverType.toUpperCase().equals("PMX")) {
+      Util.CROSSOVER_TYPE = crossoverType;
+    } else {
+      throw new InvalidCrossoverException();
+    }
 
     Population population = new Population(true);
     System.out.println("Initial distance: " + population.getBest().getDistance());

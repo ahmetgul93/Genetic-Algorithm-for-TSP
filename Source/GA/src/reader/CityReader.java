@@ -5,31 +5,33 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 import ga.tsp.CityManager;
-import ga.tsp.exception.InvalidInputException;
+import ga.tsp.exception.InvalidInstanceException;
 
 public class CityReader {
 
   private final CityManager cityManager;
   private String instance;
 
-  public CityReader() throws InvalidInputException {
+  public CityReader() throws InvalidInstanceException {
     this.cityManager = CityManager.getInstance();
 
     System.out.println("Please write 1 for berlin52 or 2 for burma14");
-    final Scanner scanner = new Scanner(System.in);
-    final int selection = scanner.nextInt();
+    int selection = 0;
+    final BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
+    try {
+      selection = Integer.valueOf(bufferRead.readLine());
+    } catch (NumberFormatException | IOException e) {
+      e.printStackTrace();
+    }
     if (selection == 1) {
       this.instance = "berlin52.txt";
     } else if (selection == 2) {
       this.instance = "burma14.txt";
     } else {
-      scanner.close();
-      throw new InvalidInputException();
+      throw new InvalidInstanceException();
     }
-    scanner.close();
   }
 
   public void fetchCities() {

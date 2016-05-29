@@ -8,6 +8,10 @@ import ga.tsp.CityManager.City;
 
 public class Tour {
 
+  public static Tour createEmptyTour() {
+    return new Tour(true);
+  }
+
   private double fitnessValue;
 
   private double distance;
@@ -60,6 +64,15 @@ public class Tour {
       this.fitnessValue = 1 / this.getDistance();
     }
     return this.fitnessValue;
+  }
+
+  public int getIndexOfCity(final City city) {
+    for (int i = 0; i < this.cityList.size(); i++) {
+      if (this.cityList.get(i).equals(city)) {
+        return i;
+      }
+    }
+    return -1; // city is not found
   }
 
   public int getSize() {

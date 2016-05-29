@@ -23,13 +23,6 @@ public class Genetic {
   //
   // }
 
-  /*
-   * private Tour oxCrossover(final Tour parent1, final Tour parent2) {
-   *
-   *
-   * }
-   */
-
   // private void cxCrossover(final Tour male, final Tour female, final Tour child1,
   // final Tour child2) {
   //
@@ -89,6 +82,29 @@ public class Genetic {
   //
   // }
 
+  private int[] createSegment(final int bound) {
+    final Random rand = new Random();
+    int cutPoint1 = rand.nextInt(bound);
+    int cutPoint2 = rand.nextInt(bound);
+    while (cutPoint2 == cutPoint1) {
+      cutPoint2 = rand.nextInt(bound);
+    }
+    if (cutPoint1 > cutPoint2) { // make sure cutPoint1 < cutPoint2
+      final int temp = cutPoint1;
+      cutPoint1 = cutPoint2;
+      cutPoint2 = temp;
+    }
+
+    return new int[] {cutPoint1, cutPoint2};
+  }
+
+  /**
+   * Cycle crossover
+   *
+   * @param parent1
+   * @param parent2
+   * @return
+   */
   private Tour cxCrossover(final Tour parent1, final Tour parent2) {
     final Tour child = new Tour(true);
     int index = 0;
@@ -116,7 +132,9 @@ public class Genetic {
     }
 
     for (int i = Util.ELITISM_COUNT; i < Util.POPULATION_SIZE; i += 2) {
-      Tour parent1 = null, parent2 = null, child1 = null, child2 = null;
+      Tour parent1 = null, parent2 = null;
+      Tour child1 = null;
+      Tour child2 = null;
       try {
         parent1 = this.wheelRouletteSelection();
         parent2 = this.wheelRouletteSelection();
@@ -124,20 +142,12 @@ public class Genetic {
         e.printStackTrace();
       }
 
-      if (Util.CROSSOVER_TYPE.equals("CX")) {
-
-        // child1 = new Tour(true);
-        //
-        // child2 = new Tour(true);
-        //
-        // this.cxCrossover(parent1, parent2, child1, child2);
-
+      if (Util.CROSSOVER_TYPE.toUpperCase().equals("CX")) {
         child1 = this.cxCrossover(parent1, parent2);
         child2 = this.cxCrossover(parent2, parent1);
-
-      } else if (Util.CROSSOVER_TYPE.equals("OX")) {
-        // child1 = this.oxCrossover();
-        // child2 = this.oxCrossover();
+      } else if (Util.CROSSOVER_TYPE.toUpperCase().equals("PMX")) {
+        child1 = this.pmxCrossover(parent1, parent2);
+        child2 = this.pmxCrossover(parent2, parent1);
       }
 
       newPop.setTour(i, child1);
@@ -164,12 +174,52 @@ public class Genetic {
 
   private void mutate(final Tour tour) {
     final Random r = new Random();
-    Collections.swap(tour.getCityList(), r.nextInt(tour.getSize()), r.nextInt(tour.getSize()));
+    for (int i = 0; i < tour.getSize(); i++) {
+      if (r.nextFloat() < Util.MUTATION_PROBABILITY) {
+        final int j = r.nextInt(tour.getSize());
+        Collections.swap(tour.getCityList(), i, j);
+      }
+    }
   }
 
-  // private Tour oxCrossover() {
-  //
-  // }
+  /**
+   * For detail:
+   * http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/PMXCrossoverOperator.
+   * aspx
+   *
+   * @param parent1
+   * @param parent2
+   * @return
+   */
+  private Tour pmxCrossover(final Tour parent1, final Tour parent2) {
+    final Tour child = new Tour(true);
+    final int[] segments = this.createSegment(parent1.getSize() - 1);
+    for (int i = segments[0]; i <= segments[1]; i++) {
+      child.setCity(i, parent1.getCity(i));
+    }
+
+    for (int i = segments[0]; i <= segments[1]; i++) {
+      final City selectedCity = parent2.getCity(i);
+      if (!child.contains(selectedCity)) {
+        int index = i;
+        do {
+          final City city = parent1.getCity(index);
+          index = parent2.getIndexOfCity(city);
+        } while (index >= segments[0] && index <= segments[1]);
+
+        child.setCity(index, selectedCity);
+      }
+    }
+
+    for (int i = 0; i < parent1.getSize(); i++) {
+      final City city = child.getCity(i);
+      if (city.getX() == 0.0 && city.getY() == 0.0) {
+        child.setCity(i, parent2.getCity(i));
+      }
+    }
+
+    return child;
+  }
 
   public Population run(final Population pop) {
     this.pop = pop;
