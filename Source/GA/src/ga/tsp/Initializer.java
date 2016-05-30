@@ -15,12 +15,7 @@ public class Initializer {
     reader.fetchCities();
   }
 
-  public static void main(final String[] args) throws InvalidCrossoverException {
-    try {
-      constructCities();
-    } catch (final InvalidInstanceException e) {
-      e.printStackTrace();
-    }
+  private static void determineCrossover() throws InvalidCrossoverException {
     System.out.println("Please write one crossover type for process (CX or PMX)");
     final BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
     String crossoverType = null;
@@ -34,9 +29,18 @@ public class Initializer {
     } else {
       throw new InvalidCrossoverException();
     }
+  }
+
+  public static void main(final String[] args)
+      throws InvalidCrossoverException, InvalidInstanceException {
+
+    constructCities();
+    determineCrossover();
 
     Population population = new Population(true);
     System.out.println("Initial distance: " + population.getBest().getDistance());
+    System.out.println("Initial best:");
+    System.out.println(population.getBest());
 
     final Genetic algorithm = new Genetic();
     for (int i = 0; i < Util.GENERATION_COUNT; i++) {

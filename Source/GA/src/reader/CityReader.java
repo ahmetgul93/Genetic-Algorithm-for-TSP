@@ -17,7 +17,7 @@ public class CityReader {
   public CityReader() throws InvalidInstanceException {
     this.cityManager = CityManager.getInstance();
 
-    System.out.println("Please write 1 for berlin52 or 2 for burma14");
+    System.out.println("Please write 1 for berlin52 or 2 for burma14 or 3 for bayg29");
     int selection = 0;
     final BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
     try {
@@ -29,6 +29,8 @@ public class CityReader {
       this.instance = "berlin52.txt";
     } else if (selection == 2) {
       this.instance = "burma14.txt";
+    } else if (selection == 3) {
+      this.instance = "bayg29.txt";
     } else {
       throw new InvalidInstanceException();
     }

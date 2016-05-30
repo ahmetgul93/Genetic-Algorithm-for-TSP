@@ -33,11 +33,6 @@ public class Tour {
     return this.cityList.contains(city);
   }
 
-  @Override
-  public boolean equals(final Object obj) {
-    return super.equals(obj);
-  }
-
   private void generateTour() {
     this.cityList.clear();
     this.cityList.addAll(CityManager.getInstance().getCities());

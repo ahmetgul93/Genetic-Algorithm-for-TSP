@@ -11,77 +11,6 @@ public class Genetic {
 
   private Population pop;
 
-  // public int breakUp(final Tour parent1) // ayrılacağı noktayı belirliyor !
-  // {
-  // final Random r = new Random();
-  //
-  // int breakingPoint = 0;
-  // breakingPoint = r.nextInt(parent1.getSize());
-  //
-  //
-  // return breakingPoint;
-  //
-  // }
-
-  // private void cxCrossover(final Tour male, final Tour female, final Tour child1,
-  // final Tour child2) {
-  //
-  //
-  // /*
-  // * final Tour child = new Tour(true); int index = 0; while
-  // * (!child.contains(parent2.getCity(index))) { child.setCity(index, parent1.getCity(index));
-  // * final int position = this.getPosition(parent1, parent2.getCity(index));
-  // * child.setCity(position, parent2.getCity(index)); index = position; }
-  // *
-  // * for (int i = 0; i < child.getSize(); i++) { if (child.getCity(i) == null) { child.setCity(i,
-  // * parent2.getCity(i)); } }
-  // *
-  // * return child;
-  // */
-  //
-  // // abi mantıken bir child değil iki children dönmesi gerekli değil mi ?
-  // // O yüzden parametre ile gonderdim void'e aldım kodu.
-  // // Ama yine de sen bilirsin tabi
-  //
-  // final int breakingPoint = this.breakUp(male);
-  //
-  //
-  //
-  // int i = 0;
-  //
-  // while (i != breakingPoint) // 1. kromozom icin
-  // {
-  // child1.setCity(i, male.getCity(i));
-  // i++;
-  // }
-  //
-  // int j = i;
-  //
-  // while (i != female.getSize()) // 2. kromozom icin
-  // {
-  // final int x = female.getSize();
-  // child1.setCity(i, female.getCity(i));
-  // i++;
-  // }
-  //
-  // while (j != male.getSize()) // 1.kromozom devami
-  // {
-  // child2.setCity(j, male.getCity(j));
-  // j++;
-  // }
-  //
-  // int t = 0;
-  //
-  // while (t != breakingPoint) // 2. kromozom devami
-  // {
-  // child2.setCity(t, female.getCity(t));
-  // t++;
-  // }
-  //
-  //
-  //
-  // }
-
   private int[] createSegment(final int bound) {
     final Random rand = new Random();
     int cutPoint1 = rand.nextInt(bound);
@@ -99,14 +28,16 @@ public class Genetic {
   }
 
   /**
-   * Cycle crossover
+   * Cycle crossover, for details:
+   * http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/CycleCrossoverOperator.
+   * aspx
    *
    * @param parent1
    * @param parent2
    * @return
    */
   private Tour cxCrossover(final Tour parent1, final Tour parent2) {
-    final Tour child = new Tour(true);
+    final Tour child = Tour.createEmptyTour();
     int index = 0;
     while (!child.contains(parent2.getCity(index))) {
       child.setCity(index, parent1.getCity(index));
@@ -148,12 +79,13 @@ public class Genetic {
         child2 = this.pmxCrossover(parent2, parent1);
       }
 
-      newPop.addTour(i, child1);
-      newPop.addTour(i + 1, child2);
-    }
+      this.mutate(child1);
+      this.mutate(child2);
 
-    for (int i = Util.ELITISM_COUNT; i < Util.POPULATION_SIZE; i++) {
-      this.mutate(newPop.getTour(i));
+      final Tour[] best = this.runSteadyState(parent1, parent2, child1, child2);
+
+      newPop.addTour(i, best[0]);
+      newPop.addTour(i + 1, best[1]);
     }
 
     return newPop;
@@ -181,7 +113,7 @@ public class Genetic {
   }
 
   /**
-   * For detail:
+   * Partially-Mapped Crossover, for details:
    * http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/PMXCrossoverOperator.
    * aspx
    *
@@ -190,7 +122,7 @@ public class Genetic {
    * @return
    */
   private Tour pmxCrossover(final Tour parent1, final Tour parent2) {
-    final Tour child = new Tour(true);
+    final Tour child = Tour.createEmptyTour();
     final int[] segments = this.createSegment(parent1.getSize() - 1);
     for (int i = segments[0]; i <= segments[1]; i++) {
       child.setCity(i, parent1.getCity(i));
@@ -222,6 +154,26 @@ public class Genetic {
   public Population run(final Population pop) {
     this.pop = pop;
     return this.evalPopulation();
+  }
+
+  private Tour[] runSteadyState(final Tour parent1, final Tour parent2, final Tour child1,
+      final Tour child2) {
+    final Tour[] tours = new Tour[] {parent1, parent2, child1, child2};
+    boolean flag = true;
+    Tour temp = Tour.createEmptyTour();
+    while (flag) {
+      flag = false;
+      for (int i = 0; i < tours.length - 1; i++) {
+        if (tours[i].getFitnessValue() < tours[i + 1].getFitnessValue()) {
+          temp = tours[i];
+          tours[i] = tours[i + 1];
+          tours[i + 1] = temp;
+          flag = true;
+        }
+      }
+    }
+
+    return new Tour[] {tours[0], tours[1]};
   }
 
   private Tour wheelRouletteSelection() throws InvalidSelectionStateException {
