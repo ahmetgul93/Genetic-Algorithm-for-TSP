@@ -44,14 +44,6 @@ public class Population {
     this.tours.add(tour);
   }
 
-  // public List<Tour> getBestOnes() {
-  // final List<Tour> bestOnes = new ArrayList<>(Util.ELITISM_COUNT);
-  // for (int i = 0; i < Util.ELITISM_COUNT; i++) {
-  // bestOnes.add(this.queue.remove());
-  // }
-  // return bestOnes;
-  // }
-
   public Tour getBest() {
     Tour best = this.tours.get(0);
     for (int i = 1; i < this.tours.size(); i++) {
@@ -62,7 +54,19 @@ public class Population {
     return best;
   }
 
+  // public List<Tour> getBestOnes() {
+  // final List<Tour> bestOnes = new ArrayList<>(Util.ELITISM_COUNT);
+  // for (int i = 0; i < Util.ELITISM_COUNT; i++) {
+  // bestOnes.add(this.queue.remove());
+  // }
+  // return bestOnes;
+  // }
+
   public Tour getTour(final int i) {
     return this.tours.get(i);
+  }
+
+  public List<Tour> getTours() {
+    return this.tours;
   }
 }

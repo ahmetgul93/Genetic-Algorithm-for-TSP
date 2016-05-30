@@ -6,11 +6,12 @@ public class Util {
 
   public static final boolean ELITISM = true;
 
-  public static final int ELITISM_COUNT = 1;
+  public static final int ELITISM_COUNT = 1; // don't change this. the algorithm is not responsive
+                                             // yet for bigger elitism count.
 
-  public static String CROSSOVER_TYPE;
+  public static String CROSSOVER_TYPE; // we are taking this input from user.
 
-  // public static final double CROSSOVER_PROBABILITY = 0.9;
+  // public static String SELECTION_TYPE;
 
   public static final double MUTATION_PROBABILITY = 0.015;
 

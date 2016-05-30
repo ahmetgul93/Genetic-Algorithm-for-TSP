@@ -11,6 +11,22 @@ public class Genetic {
 
   private Population pop;
 
+  private void bubbleSort(final Tour[] tours) {
+    boolean flag = true;
+    Tour temp = Tour.createEmptyTour();
+    while (flag) {
+      flag = false;
+      for (int i = 0; i < tours.length - 1; i++) {
+        if (tours[i].getFitnessValue() > tours[i + 1].getFitnessValue()) {
+          temp = tours[i];
+          tours[i] = tours[i + 1];
+          tours[i + 1] = temp;
+          flag = true;
+        }
+      }
+    }
+  }
+
   private int[] createSegment(final int bound) {
     final Random rand = new Random();
     int cutPoint1 = rand.nextInt(bound);
@@ -64,6 +80,7 @@ public class Genetic {
 
     for (int i = Util.ELITISM_COUNT; i < Util.POPULATION_SIZE; i += 2) {
       Tour parent1 = null, parent2 = null, child1 = null, child2 = null;
+
       try {
         parent1 = this.wheelRouletteSelection();
         parent2 = this.wheelRouletteSelection();
@@ -151,29 +168,42 @@ public class Genetic {
     return child;
   }
 
+  // private Tour rankSelection() throws InvalidSelectionStateException {
+  // final Tour[] tours = (Tour[]) this.pop.getTours().toArray();
+  // this.bubbleSort(tours);
+  // final int sum = tours.length * (tours.length + 1) / 2;
+  // final Random rand = new Random();
+  // final float randomN = rand.nextFloat() * sum;
+  // float partSum = 0;
+  // for (int i = 1; i <= Util.POPULATION_SIZE; i++) {
+  // partSum += i;
+  // if (partSum >= randomN) {
+  // return tours[i - 1];
+  // }
+  // }
+  // throw new InvalidSelectionStateException();
+  // }
+
   public Population run(final Population pop) {
     this.pop = pop;
     return this.evalPopulation();
   }
 
+  /**
+   * This algorithm uses bubble sort to take best 2 tour.
+   *
+   * @param parent1
+   * @param parent2
+   * @param child1
+   * @param child2
+   * @return
+   */
   private Tour[] runSteadyState(final Tour parent1, final Tour parent2, final Tour child1,
       final Tour child2) {
     final Tour[] tours = new Tour[] {parent1, parent2, child1, child2};
-    boolean flag = true;
-    Tour temp = Tour.createEmptyTour();
-    while (flag) {
-      flag = false;
-      for (int i = 0; i < tours.length - 1; i++) {
-        if (tours[i].getFitnessValue() < tours[i + 1].getFitnessValue()) {
-          temp = tours[i];
-          tours[i] = tours[i + 1];
-          tours[i + 1] = temp;
-          flag = true;
-        }
-      }
-    }
+    this.bubbleSort(tours);
 
-    return new Tour[] {tours[0], tours[1]};
+    return new Tour[] {tours[tours.length - 2], tours[tours.length - 1]};
   }
 
   private Tour wheelRouletteSelection() throws InvalidSelectionStateException {
